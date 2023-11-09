@@ -5,7 +5,7 @@ In this project, Deep Convolutional Neural Networks (DCNNs) is used to simultano
 ## Platform
 
 - python 3.6.8
-- pytorch 1.0.0
+- pytorch 1.10.0
 
 ## Codes
 
@@ -26,8 +26,6 @@ $ python train.py --epochs 100 --lr 0.0001 --batch-size 8
 
 ### 3. Demo
 
-- Download the pretrained model [GoogleDrive](https://drive.google.com/drive/folders/1Th4hMEdSr3kTQBXJTIDstSJn2eUWvoaa?usp=sharing)
-- Put in the folder `./models`
 - Run demo:
 
 ```
