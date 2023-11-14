@@ -1,8 +1,32 @@
 # Robotic-grasping-cornell
 
 In this project, Deep Convolutional Neural Networks (DCNNs) is used to simultanously detect a grasping point and angle of an object, so that a robot arm can pick the object. In general, this is the implementation of a small model of the model presented in this paper https://arxiv.org/abs/1802.00520. We do not implement the Grasp Proposal Networks, so instead of using 2-stage DCNNs, we use one-stage DCNNs.
-Acurácia final: 94.10178025534975
-Perda final: 3.772731165262474
+Perda média final: 3.772731165262474
+Acurácia: 0.9790
+Precisão: 0.9783
+Recall: 0.9560
+F1-Score: 0.9606
+Matriz de Confusão:
+[[180   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0]
+ [  0 251   1   3   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0 417   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   2   0]
+ [  0   2   4 358   5   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   1   0 334   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   4 320   0   0   0   0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   1 321   0   0   0   0   0   0   0   0   0   0   0   0   0]
+ [  0   1   1   0   0   0   3 296   2   0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0 305   0   0   0   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   1   0 280   0   1   0   0   0   0   0   0   0   0]
+ [  0   1   0   0   0   0   0   0   0   2 277   6   0   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0 240   1   0   0   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   2 304   0   0   0   0   0   0   0]
+ [  0   1   0   0   0   0   0   0   0   0   0   0   2 262   1   0   0   0   1   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0 259   0   0   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   1 273   3   0   0   0]
+ [  0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0 284   1   0   0]
+ [  0   1   0   0   0   0   0   0   0   0   0   0   0   1   0   0  12 222   1   1]
+ [  0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0  235   0]
+ [  0  33   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   8   0  26]]
 
 ## Platform
 
