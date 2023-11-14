@@ -21,15 +21,15 @@ train_list = list(train_list_idx);
 test_list = list(test_list_idx);
 
 // imgTestOutDir = 'E:/Robotics_Lab/Robotics/Grasp/code/grasp_multiObject/grasp_multiObject_multiGrasp/dataset/grasp/Images_Test/Cropped320_rgd';
-imgTestOutDir = 'C:\\Users\\Aldan\\Documents\\kakau\\robotic-grasping-cornell\\dataset\\grasp\\Images_Test\\Cropped320_rgd'
+imgTestOutDir = 'C:\\Users\\Aldan\\Documents\\GitHub\\robotic-grasping-detection-for-autonomous-robot\\dataset\\grasp\\Images_Test\\Cropped320_rgd'
 // imgDataOutDir = 'E:/Robotics_Lab/Robotics/Grasp/code/grasp_multiObject/grasp_multiObject_multiGrasp/dataset/grasp/Images';
-imgDataOutDir = 'C:\\Users\\Aldan\\Documents\\kakau\\robotic-grasping-cornell\\dataset\\grasp\\Images'
+imgDataOutDir = 'C:\\Users\\Aldan\\Documents\\GitHub\\robotic-grasping-detection-for-autonomous-robot\\dataset\\grasp\\Images'
 // annotationDataOutDir = 'E:/Robotics_Lab/Robotics/Grasp/code/grasp_multiObject/grasp_multiObject_multiGrasp/dataset/grasp/Annotations';
-annotationDataOutDir = 'C:\\Users\\Aldan\\Documents\\kakau\\robotic-grasping-cornell\\dataset\\grasp\\Annotations'
+annotationDataOutDir = 'C:\\Users\\Aldan\\Documents\\GitHub\\robotic-grasping-detection-for-autonomous-robot\\dataset\\grasp\\Annotations'
 // imgSetTrain = 'E:/Robotics_Lab/Robotics/Grasp/code/grasp_multiObject/grasp_multiObject_multiGrasp/dataset/grasp/ImageSets/train.txt'; 
-imgSetTrain = 'C:\\Users\\Aldan\\Documents\\kakau\\robotic-grasping-cornell\\dataset\\grasp\\ImageSets\\train.txt'
+imgSetTrain = 'C:\\Users\\Aldan\\Documents\\GitHub\\robotic-grasping-detection-for-autonomous-robot\\dataset\\grasp\\ImageSets\\train.txt'
 // imgSetTest = 'E:/Robotics_Lab/Robotics/Grasp/code/grasp_multiObject/grasp_multiObject_multiGrasp/dataset/grasp/ImageSets/test.txt';
-imgSetTest = 'C:\\Users\\Aldan\\Documents\\kakau\\robotic-grasping-cornell\\dataset\\grasp\\ImageSets\\test.txt'
+imgSetTest = 'C:\\Users\\Aldan\\Documents\\GitHub\\robotic-grasping-detection-for-autonomous-robot\\dataset\\grasp\\ImageSets\\test.txt'
 %%
 for folder = 1:10
     display(['processing folder ' int2str(folder)])

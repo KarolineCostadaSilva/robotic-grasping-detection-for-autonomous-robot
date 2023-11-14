@@ -15,7 +15,7 @@ class GraspNet(nn.Module):
         self.n_classes = 20 # len(classes) | Número de classes, assumido como 20
         
         # vgg16 = models.vgg16(pretrained=True)
-        wide_resnet101 = models.wide_resnet101_2(pretrained=True, progress= True)
+        wide_resnet101 = models.wide_resnet101_2(pretrained=True)
         #print('vgg16: {}'.format(vgg16))
         
         # until the maxpool_5
@@ -26,12 +26,16 @@ class GraspNet(nn.Module):
         
         # Remove the last layer (fully connected)
         # Removendo a última camada (fully connected) do Wide ResNet-101-2. 
-        modules = list(wide_resnet101.children())[:-1]  # Remove the last fc layer | Remove a última camada fc
-        self.GraspNet_base = nn.Sequential(*modules) # Base da rede
+        # modules = list(wide_resnet101.children())[:-2]  # Remove the last fc layer | Remove a última camada fc
+        # self.GraspNet_base = nn.Sequential(*modules) # Base da rede
+        self.GraspNet_base = nn.Sequential(*list(wide_resnet101.children())[:-1])
 
         # Since we have removed the last layer, we use the output features of the second last layer
         # Obtendo o número de características da camada anterior à removida. 
         num_features = wide_resnet101.fc.in_features
+
+        # Adicionar uma camada de Adaptive Average Pooling
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
           
         # Remove the last fc, fc8 pre-trained for 1000-way ImageNet classification. Use the * operator to expand the list into positional arguments
         # self.GraspNet_classifier = nn.Sequential(*list(wide_resnet101.classifier._modules.values())[:-1])
@@ -40,6 +44,9 @@ class GraspNet(nn.Module):
         # Criando um novo classificador, omitindo a última camada do original. 
         self.GraspNet_classifier = nn.Sequential(
             nn.Linear(num_features, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(),
             # Normally another Linear layer would be here, but we're customizing below
@@ -52,6 +59,9 @@ class GraspNet(nn.Module):
         # Criando um regressor personalizado com estrutura semelhante ao classificador. 
         self.GraspNet_regressor = nn.Sequential(
             nn.Linear(num_features, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(),
         )
@@ -77,17 +87,21 @@ class GraspNet(nn.Module):
         :return: Previsões da caixa delimitadora e pontuação da classe.
         """
         base_feat =  self.GraspNet_base(img) # Passa a imagem pela base da rede. 
-        base_feat = base_feat.view(base_feat.size(0), -1) # Achata os recursos
+        # base_feat = base_feat.view(base_feat.size(0), -1) # Achata os recursos
         # Passa os recursos pela camada classificadora e regressora
-        fc7 = self.GraspNet_classifier(base_feat)
-        fc7_reg = self.GraspNet_regressor(base_feat)
+        # Aplicar o pooling aqui para reduzir as dimensões
+        pooled_feat = self.avgpool(base_feat)
+        pooled_feat = pooled_feat.view(pooled_feat.size(0), -1) # Achata os recursos
+
+        cls_feat = self.GraspNet_classifier(pooled_feat)
+        reg_feat = self.GraspNet_regressor(pooled_feat)
         
         # compute angle bin classification probability
         # Calcula a pontuação da classe e a previsão da caixa delimitadora
-        cls_score = self.GraspNet_cls_score(fc7)
+        cls_score = self.GraspNet_cls_score(cls_feat)
         #cls_prob = F.softmax(cls_score, 1)
 
-        rect_pred = self.GraspNet_rect_pred(fc7_reg)
+        rect_pred = self.GraspNet_rect_pred(reg_feat)
 
         return rect_pred, cls_score # Retorna previsões da caixa delimitadora e pontuação da classe.
         

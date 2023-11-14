@@ -13,8 +13,8 @@ from grasp_dataset import GraspDataset
 from network import GraspNet
 
 # Configuração do dispositivo para treinamento (CPU ou GPU)
-device = torch.device("cpu")
-# device = torch.device("cuda")
+# device = torch.device("cpu")
+device = torch.device("cuda")
 # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def main(args):
@@ -33,6 +33,10 @@ def main(args):
     # Inicialização de variáveis para armazenar as perdas
     loss_cls = 0
     loss_rect = 0
+
+    epoch_losses = []
+    epoch_accuracies = []
+
     # Inicialização do modelo e movendo-o para o dispositivo apropriado
     model = GraspNet() # Cria uma instância da classe GraspNet
     model = model.to(device) # Move o modelo para o dispositivo apropriado
@@ -40,6 +44,8 @@ def main(args):
     # Iteração sobre os epochs
     total_step = len(train_loader) # Número total de batches
     for epoch in range(args.epochs): # Iteração sobre os epochs
+        model.train()
+        total_loss, total_correct, total_samples = 0.0, 0, 0
         for i, (img, gt_rect) in enumerate(train_loader): # Iteração sobre os batches
             #img, gt_rect  = train_iter.next()
             # Preparando a entrada e as anotações para o modelo
@@ -52,6 +58,7 @@ def main(args):
             gt_rect = gt_rect.to(device)  # Coordenadas das caixas delimitadoras
             
             #print('img.requires_grad: {}'.format(img.requires_grad))
+            optimizer.zero_grad()
             # Execução do modelo
             rect_pred, cls_score = model(img) 
             #print('rect_pred.requires_grad: {}'.format(rect_pred.requires_grad))
@@ -81,14 +88,9 @@ def main(args):
             # Cálculo da perda de regressão da caixa delimitadora e perda total
             loss_rect = F.smooth_l1_loss(rect_pred, gt_rect, reduction='mean')
             loss = loss_cls + loss_rect
-            # Cálculo das perdas médias e da acurácia
-            avg_loss = loss.item() / args.batch_size # loss.data[0] / args.batch_size
-            avg_cls_loss = loss_cls.item() / args.batch_size # loss_cls.data[0] / args.batch_size
-            avg_rect_loss = loss_rect.item() / args.batch_size # loss_rect.data[0] / args.batch_size
-            accuracy = (torch.argmax(cls_prob, dim=1) == gt_cls).sum().item() / args.batch_size # (torch.argmax(cls_prob, dim=1) == gt_cls).sum().data[0] / args.batch_size
+            avg_loss = loss.item() / args.batch_size
+            accuracy = (torch.argmax(cls_prob, dim = 1) == gt_cls).sum().item() / args.batch_size
             
-            # accuracy = (torch.argmax(cls_prob, dim=1) == gt_cls).sum().data[0] / args.batch_size
-            # print('Epoch: {0}, Step: {1}, Loss: {2:.4f}, Cls Loss: {3:.4f}, Rect Loss: {4:.4f}, Accuracy: {5:.2f}%'.format(epoch+1, i+1, avg_loss, avg_cls_loss, avg_rect_loss, accuracy*100))
             # Exibição das perdas
             print('epoch {}/{}, step: {}, loss_cls: {:.3f}, loss_rect: {:.3f}, loss: {:.3f}, accuracy: {:.2f}'.format(epoch + 1, args.epochs, i, loss_cls.item(), loss_rect.item(), loss.item(), accuracy*100))
             
@@ -98,8 +100,18 @@ def main(args):
             model.zero_grad()
             loss.backward()
             optimizer.step()
+
+            total_loss += loss.item()
+            total_correct += (torch.argmax(cls_score, dim=1) == gt_cls).sum().item()
+            total_samples += gt_cls.size(0)
+        avg_loss = total_loss/len(train_loader)
+        avg_accuracy = total_correct / total_samples * 100
+        epoch_losses.append(avg_loss)
+        epoch_accuracies.append(avg_accuracy)
+        final_accuracy = epoch_accuracies[-1]
+        final_losses = epoch_losses[-1]
     # Salvamento do modelo após o treinamento
-    save_name = os.path.join(args.model_path, 'model_{}.ckpt'.format(epoch))
+    save_name = os.path.join(args.model_path, 'model_wideresnet_101{}.ckpt'.format(epoch))
     torch.save({
       'epoch': epoch + 1,
       'model': model.state_dict(), # 'model' should be 'model_state_dict'
@@ -109,21 +121,24 @@ def main(args):
     
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)
-    plt.plot(avg_loss, label='Perda')
+    plt.plot(epoch_losses, label='Perda Média')
     plt.title('Perda por Época')
     plt.xlabel('Época')
     plt.ylabel('Perda')
     plt.legend()
 
     plt.subplot(1, 2, 2)
-    plt.plot(accuracy*100, label='Acurácia')
+    plt.plot(epoch_accuracies, label='Acurácia Média')
     plt.title('Acurácia por Época')
     plt.xlabel('Época')
     plt.ylabel('Acurácia (%)')
     plt.legend()
 
     plt.show()
-    plt.savefig('loss_accuracy.png')
+    plt.savefig('Metricas_wideresnet101.png')
+
+    print('Acurácia final: ', final_accuracy)
+    print('Perda final: ', final_losses)
     
 def parse_arguments(argv):
     """

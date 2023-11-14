@@ -38,7 +38,7 @@ def load_model(gpu_ids):
     # model.load_state_dict(state_dict)
     
     # https://pytorch.org/tutorials/beginner/saving_loading_models.html
-    checkpoint = torch.load('./models/model_99.ckpt', map_location=lambda storage, loc: storage)
+    checkpoint = torch.load('./models/model_wideresnet10199.ckpt', map_location=lambda storage, loc: storage)
     model.load_state_dict(checkpoint['model'])
 
     
