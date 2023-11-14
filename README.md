@@ -14,7 +14,7 @@ F1-Score: 0.9606
 
 Matriz de Confusão:
 
-<img src="C:\\Users\\Aldan\\Documents\\GitHub\\robotic-grasping-detection-for-autonomous-robot\\matriz_de_confusao.png" alt="Matriz de Confusão">
+![Matriz de Confusão](matriz_de_confusao.png)
 
 ## Platform
 
