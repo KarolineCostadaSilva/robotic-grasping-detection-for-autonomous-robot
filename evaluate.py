@@ -4,6 +4,9 @@ from torch.utils.data import DataLoader
 from grasp_dataset import GraspDataset
 from network import GraspNet
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 def evaluate_model(dataset_path, image_set):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -37,7 +40,15 @@ def evaluate_model(dataset_path, image_set):
     print('Precisão: {:.4f}'.format(precision))
     print('Recall: {:.4f}'.format(recall))
     print('F1-Score: {:.4f}'.format(f1))
-    print('Matriz de Confusão:\n', conf_matrix)
+    print('Matriz de Confusão:\n')
+
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues')
+    plt.title('Matriz de Confusão')
+    plt.xlabel('Classes Preditas')
+    plt.ylabel('Classes Verdadeiras')
+    plt.show()
+    plt.savefig('matriz_confusao.png')
 
 if __name__ == '__main__':
     dataset_path = './dataset/grasp'
