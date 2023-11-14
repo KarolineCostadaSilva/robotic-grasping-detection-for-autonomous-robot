@@ -13,8 +13,8 @@ from grasp_dataset import GraspDataset
 from network import GraspNet
 
 # Configuração do dispositivo para treinamento (CPU ou GPU)
-# device = torch.device("cpu")
-device = torch.device("cuda")
+device = torch.device("cpu")
+# device = torch.device("cuda")
 # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def main(args):
@@ -81,8 +81,16 @@ def main(args):
             # Cálculo da perda de regressão da caixa delimitadora e perda total
             loss_rect = F.smooth_l1_loss(rect_pred, gt_rect, reduction='mean')
             loss = loss_cls + loss_rect
+            # Cálculo das perdas médias e da acurácia
+            avg_loss = loss.item() / args.batch_size # loss.data[0] / args.batch_size
+            avg_cls_loss = loss_cls.item() / args.batch_size # loss_cls.data[0] / args.batch_size
+            avg_rect_loss = loss_rect.item() / args.batch_size # loss_rect.data[0] / args.batch_size
+            accuracy = (torch.argmax(cls_prob, dim=1) == gt_cls).sum().item() / args.batch_size # (torch.argmax(cls_prob, dim=1) == gt_cls).sum().data[0] / args.batch_size
+            
+            # accuracy = (torch.argmax(cls_prob, dim=1) == gt_cls).sum().data[0] / args.batch_size
+            # print('Epoch: {0}, Step: {1}, Loss: {2:.4f}, Cls Loss: {3:.4f}, Rect Loss: {4:.4f}, Accuracy: {5:.2f}%'.format(epoch+1, i+1, avg_loss, avg_cls_loss, avg_rect_loss, accuracy*100))
             # Exibição das perdas
-            print('epoch {}/{}, step: {}, loss_cls: {:.3f}, loss_rect: {:.3f}, loss: {:.3f}'.format(epoch + 1, args.epochs, i, loss_cls.item(), loss_rect.item(), loss.item()))
+            print('epoch {}/{}, step: {}, loss_cls: {:.3f}, loss_rect: {:.3f}, loss: {:.3f}, accuracy: {:.2f}'.format(epoch + 1, args.epochs, i, loss_cls.item(), loss_rect.item(), loss.item(), accuracy*100))
             
             # Backward and optimize
             # Backpropagation e otimização
@@ -99,6 +107,23 @@ def main(args):
       'loss': loss.item(),
     }, save_name)
     
+    plt.figure(figsize=(12, 5))
+    plt.subplot(1, 2, 1)
+    plt.plot(avg_loss, label='Perda')
+    plt.title('Perda por Época')
+    plt.xlabel('Época')
+    plt.ylabel('Perda')
+    plt.legend()
+
+    plt.subplot(1, 2, 2)
+    plt.plot(accuracy*100, label='Acurácia')
+    plt.title('Acurácia por Época')
+    plt.xlabel('Época')
+    plt.ylabel('Acurácia (%)')
+    plt.legend()
+
+    plt.show()
+    plt.savefig('loss_accuracy.png')
     
 def parse_arguments(argv):
     """
