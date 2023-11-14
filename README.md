@@ -1,6 +1,8 @@
 # Robotic-grasping-cornell
 
 In this project, Deep Convolutional Neural Networks (DCNNs) is used to simultanously detect a grasping point and angle of an object, so that a robot arm can pick the object. In general, this is the implementation of a small model of the model presented in this paper https://arxiv.org/abs/1802.00520. We do not implement the Grasp Proposal Networks, so instead of using 2-stage DCNNs, we use one-stage DCNNs.
+Acurácia final: 94.10178025534975
+Perda final: 3.772731165262474
 
 ## Platform
 
