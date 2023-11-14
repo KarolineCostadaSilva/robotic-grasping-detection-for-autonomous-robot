@@ -1,6 +1,6 @@
 # Robotic-grasping-cornell
 
-In this project, Deep Convolutional Neural Networks (DCNNs) is used to simultanously detect a grasping point and angle of an object, so that a robot arm can pick the object. In general, this is the implementation of a small model of the model presented in this paper https://arxiv.org/abs/1802.00520. We do not implement the Grasp Proposal Networks, so instead of using 2-stage DCNNs, we use one-stage DCNNs.
+In this project, Deep Convolutional Neural Networks (DCNNs) is used to simultanously detect a grasping point and angle of an object, so that a robot arm can pick the object. In general, this is the implementation of a small model of the model presented in this paper https://arxiv.org/abs/1802.00520. We do not implement the Grasp Proposal Networks, so instead of using 2-stage DCNNs, we use one-stage DCNNs. I used the DL model Wide Resnet 101_2 for the regression and classification training.
 
 Perda média final: 3.772731165262474
 
@@ -30,7 +30,7 @@ Matriz de Confusão:
 
 ### 1. Data preprocessing
 
-- Download [Cornell Dataset](http://pr.cs.cornell.edu/grasping/rect_data/data.php)
+- Download [Cornell Dataset](https://www.kaggle.com/datasets/oneoneliu/cornell-grasp)
 - Run `dataPreprocessingTest_fasterrcnn_split.m` (please modify paths according to your structure)
 
 ### 2. Training
@@ -41,6 +41,8 @@ $ python train.py --epochs 100 --lr 0.0001 --batch-size 8
 
 ### 3. Demo
 
+- Download the pretrained model [Google Drive](https://drive.google.com/file/d/12XA76OHynNH1W4lUxNfWRco1lwwxTX9f/view?usp=drive_link)
+- Put in the folder `./models`
 - Run demo:
 
 ```
