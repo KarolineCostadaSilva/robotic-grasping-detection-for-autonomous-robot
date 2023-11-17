@@ -20,9 +20,11 @@ import torch.nn.functional as F
 from skimage import io
 import numpy as np
 import cv2
+from PIL import Image
+
 from shapely.geometry import Polygon
 import random
-
+from torchvision.transforms import Resize, ToTensor
 from grasp_dataset import GraspDataset
 from network import GraspNet
 
@@ -96,9 +98,27 @@ test_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
 with torch.no_grad():
     for i, (img, gt_rect) in enumerate(test_loader):
-        img = img.to(device)
+
+        ###############################################################
+        # # preprocess image
+        # normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        # transform = transforms.Compose([transforms.ToTensor(), normalize])
+        # img_array = io.imread("C:\\Users\\kjcs\\Documents\\GitHub\\robotic-grasping-detection-for-autonomous-robot\\dataset\\grasp\\Images_Test\\Cropped320_rgd\\IMG_20231116_131411918.png")
+        
+        # # Converte a imagem numpy para PIL Image
+        # img = Image.fromarray(img_array)
+        # # Redimensiona a imagem para o tamanho de entrada do modelo
+        # resize_transform = Resize((224, 224))
+        # img = resize_transform(img)
+        # # Aplica as transformações necessárias
+        # img = transform(img)
+        # # end preprocessing image
+        # # Adiciona uma dimensão de lote
+        # img = img.unsqueeze(0).to(device)
+        ############################################################################
+        # img = img.to(device)
         #print('img.size(): {}'.format(img.size()))
-        rect_pred, cls_score = model(img)   
+        rect_pred, cls_score = model(img)
         cls_score = cls_score.squeeze()
         rect_pred = rect_pred.squeeze()
         #print('cls_score.shape: {}'.format(cls_score.shape))
@@ -116,7 +136,7 @@ with torch.no_grad():
         cls_score = cls_score.cpu()
         cls_score = cls_score.detach().numpy()
         ind_max = np.argmax(cls_score)
-        #print('ind_max: {}, cls_score[{}]: {}'.format(ind_max, ind_max, cls_score[ind_max]))
+        print('ind_max: {}, cls_score[{}]: {}'.format(ind_max, ind_max, cls_score[ind_max]))
         
         rect_pred = rect_pred.cpu()
         rect_pred = rect_pred.detach().numpy()
@@ -147,6 +167,12 @@ with torch.no_grad():
         # Se quiser ver os 10 primeiros exemplos, descomente as linhas abaixo
         # if i > 10:
         #     break
+
+        '''
+        Output
+        ind_max: 16, cls_score[16]: 12.616636276245117
+        rect_pred: [59.124256 17.843834 75.7024   28.589384]
+        '''
 
 
 

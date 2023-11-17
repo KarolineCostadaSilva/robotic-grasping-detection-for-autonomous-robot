@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 import torch.nn.functional as F
+from torchsummary import summary
 
 # Classe GraspNet para modelagem de rede neural
 class GraspNet(nn.Module):
@@ -147,6 +148,9 @@ class GraspNet(nn.Module):
 
 if __name__ == '__main__':
     model = GraspNet() # Cria uma instância da GraspNet
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    summary(model, input_size=(3, 224, 224)) # Imprime um resumo da rede
 
 
 
