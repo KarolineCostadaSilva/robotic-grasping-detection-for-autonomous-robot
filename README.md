@@ -61,7 +61,7 @@ python train.py --epochs 100 --lr 0.0001 --batch-size 8
 
 ### 3. Demo
 
-- Download the pretrained model [Google Drive](https://drive.google.com/file/d/12XA76OHynNH1W4lUxNfWRco1lwwxTX9f/view?usp=drive_link)
+- Download the pretrained model [Google Drive](https://drive.google.com/file/d/14WJXHpu5eSzzy299qf764q8J1Zj-DIyM/view?usp=sharing)
 - Put in the folder `./models`
 - Run demo:
 
