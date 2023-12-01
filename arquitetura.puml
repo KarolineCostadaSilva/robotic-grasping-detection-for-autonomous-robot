@@ -1,0 +1,55 @@
+@startuml
+hide stereotype
+skinparam componentStyle uml2
+left to right direction
+' Style definitions
+skinparam class {
+    BackgroundColor PaleGreen
+    ArrowColor SeaGreen
+    BorderColor SpringGreen
+}
+
+skinparam rectangle {
+    BackgroundColor White
+    ArrowColor Orange
+    BorderColor DarkRed 
+    ' DarkGoldenRod
+}
+
+' Component definitions
+component "Cornell Grasping\nDatabase" as Database
+
+' Preprocessing block with RGB representation
+component "Preprocessing\nRGB Image\nResizing to 224x224x3\nNormalize\nRotate 2º" as Preprocessing
+
+' Wide ResNet-101-2 block
+rectangle "Wide ResNet-101-2\n(Conv. and Residual Blocks)\nOmits last FC layer" as WideResNet101_2 {
+    component "AveragePooling" as AvgPooling
+    component "[Classifier]\nLinear 4096\nReLU\nDropout\nLinear 4096\nReLU\nDropout\n20 Class Output" as Classifier
+    component "[Regressor]\nLinear 4096\nReLU\nDropout\nLinear 4096\nReLU\nDropout\n4 BBox Output" as Regressor
+}
+
+component "5-Dimensional Grasp Representation\ng = {x, y, w, h, 𝜃}" as GraspRep
+
+component "Graps Visualizations in\n Hospital das Clínicas's Drugs" as Visualizations
+' Data flow
+Database --> Preprocessing : "Input"
+Preprocessing --> WideResNet101_2 : "Input"
+WideResNet101_2 --> AvgPooling : "Features"
+AvgPooling --> Classifier : "Pooled Features"
+AvgPooling --> Regressor : "Pooled Features"
+
+' Loss calculation
+database "Loss Calculation\nClassification and\nBBox Regression" as LossCalc
+Classifier --> LossCalc : "Class Score"
+Regressor --> LossCalc : "BBox Prediction"
+
+' Backpropagation (hidden arrow for conceptual purposes)
+LossCalc -[hidden]-> WideResNet101_2 : "Backpropagation"
+
+LossCalc --> GraspRep : "Output"
+
+' Visualization
+GraspRep --> Visualizations : "Grasp\nRepresentation"
+
+@enduml
