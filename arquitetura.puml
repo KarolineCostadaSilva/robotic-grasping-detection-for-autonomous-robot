@@ -1,6 +1,26 @@
 @startuml
-hide stereotype
+' hide stereotype
 skinparam componentStyle uml2
+' skinparam classFontStyle bold
+' skinparam classFontSize 18
+' skinparam classAttributeIconSize 0
+skinparam component {
+    FontSize 20
+    FontStyle bold
+}
+skinparam rectangle {
+    FontSize 30
+    FontStyle bold
+}
+skinparam database {
+    FontSize 20
+    FontStyle bold
+}
+skinparam arrow {
+    FontSize 18
+    FontStyle bold
+}
+
 left to right direction
 ' Style definitions
 skinparam class {
@@ -17,7 +37,7 @@ skinparam rectangle {
 }
 
 ' Component definitions
-component "Cornell Grasping\nDatabase" as Database
+database "Cornell Grasping\nDatabase" as Database
 
 ' Preprocessing block with RGB representation
 component "Preprocessing\nRGB Image\nResizing to 224x224x3\nNormalize\nRotate 2º" as Preprocessing
