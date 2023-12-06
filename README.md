@@ -1,8 +1,10 @@
-# Robotic-grasping-cornell
+# Robotic Grasp Detection with Deep Convolutional Neural Networks 🤖
 
-In this project, Deep Convolutional Neural Networks (DCNNs) is used to simultanously detect a grasping point and angle of an object, so that a robot arm can pick the object. In general, this is the implementation of a small model of the model presented in this paper https://arxiv.org/abs/1802.00520. We do not implement the Grasp Proposal Networks, so instead of using 2-stage DCNNs, we use one-stage DCNNs. I used the DL model Wide Resnet 101_2 for the regression and classification training.
+# Introduction
 
-Perda média final: 3.772731165262474
+In this project, Deep Convolutional Neural Networks (DCNNs) is used to simultanously detect a grasping point and angle of an object, so that a robot arm can pick the object. In general, this is the implementation of a small model of the model presented in this paper https://arxiv.org/abs/1802.00520. I used the DL model Wide Resnet 101_2 for the regression and classification training.
+
+Loss: 3.772731165262474
 
 Acurácia: 0.9790
 
@@ -16,7 +18,7 @@ Matriz de Confusão:
 
 ![Matriz de Confusão](matriz_de_confusao.png)
 
-## Platform
+## Dependencies
 
 - python 3.6.8
 - pytorch 1.10.0
@@ -51,6 +53,7 @@ pip install -r requirements.txt
 ### 1. Data preprocessing
 
 - Download [Cornell Dataset](https://www.kaggle.com/datasets/oneoneliu/cornell-grasp)
+- Put in the folder `./dataset/cornell`
 - Run `dataPreprocessingTest_fasterrcnn_split.m` (please modify paths according to your structure)
 
 ### 2. Training
@@ -61,7 +64,8 @@ python train.py --epochs 100 --lr 0.0001 --batch-size 8
 
 ### 3. Demo
 
-- Download the pretrained model [Google Drive](https://drive.google.com/file/d/14WJXHpu5eSzzy299qf764q8J1Zj-DIyM/view?usp=sharing)
+- Download the pretrained model [OneDrive](https://cinufpe-my.sharepoint.com/personal/eq_tecnica_softex_cin_ufpe_br/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Feq%5Ftecnica%5Fsoftex%5Fcin%5Fufpe%5Fbr%2FDocuments%2FTCCs%20Residentes%202023%2Fkaroline%5Fsilva%2Fweights)
+<!-- - Download the pretrained model [Google Drive](https://drive.google.com/file/d/14WJXHpu5eSzzy299qf764q8J1Zj-DIyM/view?usp=sharing) -->
 - Put in the folder `./models`
 - Run demo:
 
