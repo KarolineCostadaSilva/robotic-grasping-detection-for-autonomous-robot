@@ -116,7 +116,7 @@ with torch.no_grad():
         # # Adiciona uma dimensão de lote
         # img = img.unsqueeze(0).to(device)
         ############################################################################
-        # img = img.to(device)
+        img = img.to(device)
         #print('img.size(): {}'.format(img.size()))
         rect_pred, cls_score = model(img)
         cls_score = cls_score.squeeze()
